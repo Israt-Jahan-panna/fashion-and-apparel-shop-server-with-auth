@@ -4,7 +4,7 @@ require('dotenv').config();
 // const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors());
@@ -50,13 +50,25 @@ async function run() {
         res.send(result)
     })
 
-   app.get('/brand/:brandname', async(req , res)=>{
-   const brandname =req.params.brandname;
-   const query = { brand: brandname };
+   app.get('/brand/:name', async(req , res)=>{
+   const name =req.params.name;
+   const query = { brand: name };
    const cursor =  productCollection.find(query);
     const result = await cursor.toArray();
-   res.send(result);
+   res.send(result); 
    })
+  
+  
+
+  app.get('/brand/:name/:_id', async (req, res) => {
+    const _id =req.params._id;
+   const query = { _id: new ObjectId (_id) };
+   const cursor =  productCollection.find(query);
+    const result = await cursor.toArray();
+   res.send(result); 
+  });
+  
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
