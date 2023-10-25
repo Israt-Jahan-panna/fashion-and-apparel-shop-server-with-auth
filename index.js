@@ -36,6 +36,44 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+
+
+    const myCardCollections =client.db('myproductDB').collection('myproduct')
+    app.get('/myproduct', async (req , res)=>{
+      const cursor = myCardCollections.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+
+    app.post('/myproduct', async (req , res) =>{
+      const myCard = req.body;
+      console.log(myCard)
+      const result = await myCardCollections.insertOne(myCard)
+      res.send(result);
+    })
+
+    // update 
+    app.get('/product/:id' , async(req , res ) => {
+      const id =req.params.id ;
+    const query = {_id : new ObjectId (id)}
+    const result = await productCollection.findOne(query)
+    res.send(result)
+    })
+
+
+     // delete 
+
+  app.delete('/myproduct/:id' , async(req , res ) =>{
+    const id =req.params.id ;
+    const query = {_id : new ObjectId (id)}
+    const result = await myCardCollections.deleteOne(query);
+    res.send(result);
+  })
+
+
+
+
     const productCollection = client.db("insertDB").collection("product");
 
     app.get('/products' , async(req , res ) => {
@@ -68,7 +106,7 @@ async function run() {
    res.send(result); 
   });
   
-
+ 
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
