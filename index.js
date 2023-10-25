@@ -65,6 +65,7 @@ async function run() {
       const id = req.params.id;
       const filter = {_id : new ObjectId (id)}
       const updateProduct = req.body;
+      const options = {upsert:true}
       const product = {
         $set:{
           name: updateProduct.name,
@@ -76,7 +77,7 @@ async function run() {
           rating: updateProduct.rating,
         }
       }
-      const result = await productCollection.updateOne(filter,product);
+      const result = await productCollection.updateOne(filter,product,options);
       res.send(result);
     })
 
